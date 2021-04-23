@@ -1,5 +1,5 @@
 use crate::{
-    framed::{FrameConsumer, FrameProducer},
+    // framed::{FrameConsumer, FrameProducer},
     Error, Result,
 };
 use core::{
@@ -104,10 +104,10 @@ where
     ///
     /// NOTE:  If the `thumbv6` feature is selected, this function takes a short critical
     /// section while splitting.
-    pub fn try_split_framed(&'a self) -> Result<(FrameProducer<'a, T, N>, FrameConsumer<'a, T, N>)> {
-        let (producer, consumer) = self.try_split()?;
-        Ok((FrameProducer { producer }, FrameConsumer { consumer }))
-    }
+    // pub fn try_split_framed(&'a self) -> Result<(FrameProducer<'a, T, N>, FrameConsumer<'a, T, N>)> {
+    //     let (producer, consumer) = self.try_split()?;
+    //     Ok((FrameProducer { producer }, FrameConsumer { consumer }))
+    // }
 
     /// Attempt to release the Producer and Consumer
     ///
@@ -184,24 +184,24 @@ where
         Ok(())
     }
 
-    /// Attempt to release the Producer and Consumer in Framed mode
-    ///
-    /// This re-initializes the buffer so it may be split in a different mode at a later
-    /// time. There must be no read or write grants active, or an error will be returned.
-    ///
-    /// The `FrameProducer` and `FrameConsumer` must be from THIS `BBBuffer`, or an error
-    /// will be returned.
-    pub fn try_release_framed(
-        &'a self,
-        prod: FrameProducer<'a, T, N>,
-        cons: FrameConsumer<'a, T, N>,
-    ) -> CoreResult<(), (FrameProducer<'a, T, N>, FrameConsumer<'a, T, N>)> {
-        self.try_release(prod.producer, cons.consumer)
-            .map_err(|(producer, consumer)| {
-                // Restore the wrapper types
-                (FrameProducer { producer }, FrameConsumer { consumer })
-            })
-    }
+    // / Attempt to release the Producer and Consumer in Framed mode
+    // /
+    // / This re-initializes the buffer so it may be split in a different mode at a later
+    // / time. There must be no read or write grants active, or an error will be returned.
+    // /
+    // / The `FrameProducer` and `FrameConsumer` must be from THIS `BBBuffer`, or an error
+    // / will be returned.
+    // pub fn try_release_framed(
+    //     &'a self,
+    //     prod: FrameProducer<'a, T, N>,
+    //     cons: FrameConsumer<'a, T, N>,
+    // ) -> CoreResult<(), (FrameProducer<'a, T, N>, FrameConsumer<'a, T, N>)> {
+    //     self.try_release(prod.producer, cons.consumer)
+    //         .map_err(|(producer, consumer)| {
+    //             // Restore the wrapper types
+    //             (FrameProducer { producer }, FrameConsumer { consumer })
+    //         })
+    // }
 }
 
 /// `const-fn` version BBBuffer
@@ -994,12 +994,12 @@ where
         forget(self);
     }
 
-    pub(crate) fn shrink(&mut self, len: usize) {
-        let mut new_buf: &mut [T] = &mut [];
-        core::mem::swap(&mut self.buf, &mut new_buf);
-        let (new, _) = new_buf.split_at_mut(len);
-        self.buf = new;
-    }
+    // pub(crate) fn shrink(&mut self, len: usize) {
+    //     let mut new_buf: &mut [T] = &mut [];
+    //     core::mem::swap(&mut self.buf, &mut new_buf);
+    //     let (new, _) = new_buf.split_at_mut(len);
+    //     self.buf = new;
+    // }
 
     /// Obtain access to the inner buffer for reading
     ///

@@ -126,7 +126,7 @@ pub mod cm_mutex {
     pub use crate::bbbuffer::*;
 }
 
-pub mod framed;
+// pub mod framed;
 mod vusize;
 
 use core::result::Result as CoreResult;
