@@ -126,9 +126,6 @@ pub mod cm_mutex {
     pub use crate::bbbuffer::*;
 }
 
-// pub mod framed;
-mod vusize;
-
 use core::result::Result as CoreResult;
 
 pub use generic_array::ArrayLength;
