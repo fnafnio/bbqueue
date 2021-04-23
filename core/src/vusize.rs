@@ -63,6 +63,8 @@
 //!                                the wire.
 //! ```
 
+use num::PrimInt;
+
 const USIZE_SIZE: usize = core::mem::size_of::<usize>();
 const USIZE_SIZE_PLUS_ONE: usize = USIZE_SIZE + 1;
 
@@ -201,14 +203,14 @@ pub fn encode_usize_to_slice(value: usize, length: usize, slice: &mut [u8]) {
 
 /// Determine the size of the encoded value (in bytes) based on the
 /// encoded header
-pub fn decoded_len(byte: u8) -> usize {
+pub fn decoded_len<T: PrimInt>(byte: T) -> usize {
     byte.trailing_zeros() as usize + 1
 }
 
 /// Decode an encoded usize.
 ///
 /// Accepts a slice containing the encoded usize.
-pub fn decode_usize(input: &[u8]) -> usize {
+pub fn decode_usize<T: PrimInt>(input: &[T]) -> usize {
     let length = decoded_len(input[0]);
 
     debug_assert!(input.len() >= length, "Not enough data to decode!",);
@@ -219,7 +221,7 @@ pub fn decode_usize(input: &[u8]) -> usize {
 
     let header_bytes = &input[..length];
 
-    let mut encoded = [0u8; USIZE_SIZE];
+    let mut encoded = [T::zero(); USIZE_SIZE];
 
     if length >= USIZE_SIZE_PLUS_ONE {
         // usize + 1 special case, see `encode_usize_to_slice()` for details
